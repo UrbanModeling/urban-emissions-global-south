@@ -2,17 +2,6 @@
 
 This repository contains the analysis code accompanying the paper. The compiled pixel-level panel dataset is publicly available at https://doi.org/10.6084/m9.figshare.32605185.
 
-## Study overview
-
-We constructed an annual panel dataset (2001–2018) for 791 Global South cities (population > 500,000) at 0.1° × 0.1° spatial resolution (6,523 pixels; 117,414 pixel-year observations), integrating:
-
-- **CO₂ emissions** — EDGAR v2025 gridded dataset
-- **Urban built-up fraction** — MODIS MCD12Q1 Land Cover Type product (500 m, annual)
-- **Building height** — Global annual raster derived from ALOS PALSAR-2 microwave backscatter (Yu et al.)
-- **City boundaries** — GHS-UCDB R2019A; population from GHS-POP R2023A
-
-K-means clustering classified pixel-level emission trajectories into four types. Two-way fixed-effects panel regressions (pixel and year fixed effects) were estimated separately by trajectory cluster, UN sub-region, and urban agglomeration, across three time windows (Full: 2001–2018; Early: 2001–2009; Late: 2010–2018).
-
 ## Repository structure
 
 ```
@@ -84,10 +73,6 @@ python figures/fig3_arrow_schematic.py
 python figures/fig4_attrib_map.py
 python figures/fig4_attrib_legend.py
 ```
-
-## Data availability
-
-The compiled pixel-level panel dataset and derived variables are publicly available at https://doi.org/10.6084/m9.figshare.32605185. All source datasets are publicly accessible (see table above).
 
 ## License
 
