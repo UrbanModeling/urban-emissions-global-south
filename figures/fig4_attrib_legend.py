@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-plot_s4e_attrib_map_b.py  —  Legend only
-对应 plot_s4e_attrib_map_a.py 的双变量图例
-  x: β_urban  × slope(ln_urban)   — 水平扩张排放贡献
-  y: β_height × slope(ln_height)  — 垂直高密化排放贡献
+fig4_attrib_legend.py  —  Legend only
+Bivariate legend for fig4_attrib_map.py.
+  x: beta_urban  x slope(ln_urban)   — attributed contribution of horizontal expansion
+  y: beta_height x slope(ln_height)  — attributed contribution of vertical densification
 """
 
 import numpy as np

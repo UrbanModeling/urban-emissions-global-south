@@ -1,14 +1,14 @@
 """
-01_preprocess_v2.py
-修复版：用 rasterio.transform.rowcol() 从各数据集自身 transform 直接反算行列号，
-不再手写南起/北起公式，彻底消除坐标翻转 bug。
+00_build_pixels.py
+Uses rasterio.transform.rowcol() to derive row/col indices directly from each
+dataset's own transform, avoiding manual north-up/south-up formula errors.
 
-输出文件（均在 data/processed/ 下）：
-  pixels.pkl              城市像素基础信息（行列号已修正）
-  ghs_{var}_{epoch}.pkl   GHS单文件提取结果（11014行）
-  edgar_2000_2020.pkl     EDGAR逐年CO2
-  gdp_2000_2020.pkl       GDP逐年
-  panel_v1.pkl            最终面板
+Outputs (all under data/processed/):
+  pixels.pkl              city pixel index with corrected row/col
+  ghs_{var}_{epoch}.pkl   per-file GHS extraction results
+  edgar_2000_2020.pkl     EDGAR annual CO2
+  gdp_2000_2020.pkl       annual GDP
+  panel_v1.pkl            final panel dataset
 """
 
 import os, sys, time
@@ -31,7 +31,7 @@ if hasattr(sys.stdout, 'reconfigure'):
 
 t0 = time.time()
 
-# ── 路径 ─────────────────────────────────────────────────────
+# ── Paths ────────────────────────────────────────────────────
 BASE_DB   = 'F:/Database'  # TODO: set to your local raw-data directory
 # OUT_DIR set above via pathlib
 os.makedirs(OUT_DIR, exist_ok=True)
@@ -66,7 +66,7 @@ GS_REGIONS = [
 EXCL_ISO = ['JPN','KOR','ISR','SAU','ARE','KWT','QAT','BHR','OMN','SGP','BRN']
 
 # ══════════════════════════════════════════════════════════════
-# Step 1: 城市像素
+# Step 1: City pixels
 # ══════════════════════════════════════════════════════════════
 out_pixels = f'{OUT_DIR}/pixels.pkl'
 if os.path.exists(out_pixels):
@@ -84,9 +84,9 @@ else:
                      region=('GRGN_L2', lambda x: x.value_counts().index[0]))
                 .reset_index())
 
-    # 用 TARGET_TRANSFORM 直接反算行列号，无需关心北起/南起
-    pix_lat_c = pixels['pixel_lat'].values + 0.05   # 像素中心纬度
-    pix_lon_c = pixels['pixel_lon'].values + 0.05   # 像素中心经度
+    # Derive row/col from TARGET_TRANSFORM directly; no manual north-up formula needed
+    pix_lat_c = pixels['pixel_lat'].values + 0.05   # pixel centre latitude
+    pix_lon_c = pixels['pixel_lon'].values + 0.05   # pixel centre longitude
     r, c = rowcol(TARGET_TRANSFORM, xs=pix_lon_c, ys=pix_lat_c)
     pixels['row'] = np.array(r).clip(0, TARGET_HEIGHT - 1)
     pixels['col'] = np.array(c).clip(0, TARGET_WIDTH  - 1)
@@ -98,14 +98,14 @@ rows = pixels['row'].values
 cols = pixels['col'].values
 
 # ══════════════════════════════════════════════════════════════
-# Step 2: GHS — 每个文件独立处理输出
+# Step 2: GHS — process each file independently
 # ══════════════════════════════════════════════════════════════
 print('\nStep 2: Processing GHS files...')
 
 def warp_and_extract(src_path, rows, cols):
     with rasterio.open(src_path) as src:
         data = src.read(1, masked=True).astype(np.float64)
-        data = data.filled(0.0)   # nodata -> 0，不参与求和
+        data = data.filled(0.0)   # nodata -> 0, excluded from sum
         dst_arr = np.zeros((TARGET_HEIGHT, TARGET_WIDTH), dtype=np.float64)
         reproject(
             source=data,
@@ -142,7 +142,7 @@ if os.path.exists(out_edgar):
     edgar_df = pd.read_pickle(out_edgar)
 else:
     print('\nStep 3: Extracting EDGAR CO2...')
-    # 读取 EDGAR 自身的经纬度坐标，用 rowcol 反算行列号，不手动翻转
+    # Use EDGAR's own lat/lon coordinates with rowcol; no manual axis-flip needed
     fpath0 = f'{EDGAR_DIR}/EDGAR_2025_GHG_CO2_2000_TOTALS_emi.nc'
     ds0 = nc.Dataset(fpath0)
     edgar_lats = np.array(ds0.variables['lat'][:])
@@ -190,7 +190,7 @@ else:
     if gdp_nodata is not None:
         gdp_all[gdp_all == gdp_nodata] = np.nan
 
-    # 用文件自身 transform 反算，不手写公式
+    # Derive indices from the file's own transform, no manual formula
     gr, gc = rowcol(gdp_transform,
                     xs=pixels['pixel_lon'].values + 0.05,
                     ys=pixels['pixel_lat'].values + 0.05)
@@ -204,14 +204,14 @@ else:
     print(f'  Saved gdp_2000_2020.pkl  shape={gdp_df.shape}')
 
 # ══════════════════════════════════════════════════════════════
-# Step 5: 合并面板
+# Step 5: Assemble panel
 # ══════════════════════════════════════════════════════════════
 print('\nStep 5: Merging into panel...')
 
 GHS_EPOCHS = [2000, 2005, 2010, 2015, 2020]
 
 def interp_annual(epoch_vals, years, epochs=GHS_EPOCHS):
-    """epoch_vals: dict {epoch: Series(n_pixels)}，返回 dict {year: Series}"""
+    """epoch_vals: dict {epoch: Series(n_pixels)} -> dict {year: Series}"""
     result = {}
     for yr in years:
         if yr <= epochs[0]:
@@ -225,7 +225,7 @@ def interp_annual(epoch_vals, years, epochs=GHS_EPOCHS):
             result[yr] = (1-w) * epoch_vals[e0] + w * epoch_vals[e1]
     return result
 
-# 加载GHS
+# Load GHS
 ghs_epochs = {}
 for var in ['built_v','built_s','pop']:
     ghs_epochs[var] = {ep: pd.read_pickle(f'{OUT_DIR}/ghs_{var}_{ep}.pkl')['value']
@@ -233,7 +233,7 @@ for var in ['built_v','built_s','pop']:
 
 ghs_annual = {var: interp_annual(ghs_epochs[var], YEARS) for var in ghs_epochs}
 
-# 组装
+# Assemble rows
 pix_area_m2 = (0.1 * 111320) ** 2
 
 records = []

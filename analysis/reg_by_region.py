@@ -1,7 +1,7 @@
 """
 reg_by_region.py  —  Section 3
-(a) 各区域的簇构成分布
-(b) 分区域两路固定效应面板回归，full / early / late period
+(a) Cluster composition by UN sub-region
+(b) Two-way FE panel regression by sub-region; full / early / late periods
 """
 
 import sys, warnings

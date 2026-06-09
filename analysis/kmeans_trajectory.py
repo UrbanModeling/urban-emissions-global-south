@@ -1,19 +1,19 @@
 """
 kmeans_trajectory.py
-聚类方案：k=4，不标准化，仅 log 变换
+K-means clustering (k=4), no standardisation, log-transformed features only.
 
-特征：
-  mean_lco2   = mean(log1p(co2_kt), 2001-2018)   排放水平
-  dmean_lco2  = mean_late - mean_early            两期均值差
-  dslope_lco2 = slope_late - slope_early          两期斜率差（加速度）
+Features:
+  mean_lco2   = mean(log1p(co2_kt), 2001-2018)   emission level
+  dmean_lco2  = mean_late - mean_early            change in mean level
+  dslope_lco2 = slope_late - slope_early          change in trend slope (acceleration)
 
-结果（按排放水平降序）：
-  High-decel   高排放，减速（+57% → +16%）
-  Mid-decel    中排放，减速（+61% → +40%）
-  Mid-accel    中低排放，加速（+45% → +67%）
-  Low-accel    极低排放，加速（+35% → +69%）
+Clusters (ordered by mean emission level, descending):
+  High-decel   high emission, decelerating  (+57% -> +16%)
+  Mid-decel    mid  emission, decelerating  (+61% -> +40%)
+  Mid-accel    mid  emission, accelerating  (+45% -> +67%)
+  Low-accel    low  emission, accelerating  (+35% -> +69%)
 
-输出：
+Outputs:
   output/kmeans_trajectory.txt
   data/processed/cluster_types.pkl
   data/processed/cluster_traj.pkl

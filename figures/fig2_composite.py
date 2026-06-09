@@ -24,7 +24,7 @@ FIG_DIR  = ROOT / 'fig'
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
 sys.path.insert(0, str(Path(__file__).parent))
-# from utils import next_path # 視需求保留
+# from utils import next_path
 
 warnings.filterwarnings('ignore')
 
@@ -121,7 +121,7 @@ gs_r1 = gridspec.GridSpecFromSubplotSpec(1, 4, subplot_spec=gs_outer[0], wspace=
 gs_r2 = gridspec.GridSpecFromSubplotSpec(1, 4, subplot_spec=gs_outer[1], wspace=0.52)
 gs_r3 = gridspec.GridSpecFromSubplotSpec(1, 4, subplot_spec=gs_outer[2], wspace=0.12)
 
-# 這裡稍微調大了 bottom 留出更多空間給兩排圖例
+# Increase bottom margin to accommodate the two legend rows
 fig.subplots_adjust(left=0.08, right=0.97, top=0.94, bottom=0.15) 
 
 LABELS = list('abcdefghijkl')
@@ -285,20 +285,20 @@ for ci, cl in enumerate(CLUSTERS):
 
 # ── Global Legends (Placed at the bottom) ─────────────────────────────────────
 
-# 【第一排圖例】：折線圖圖例 (合併 CO2、Urban fraction、Building height)
+# Legend row 1: trajectory line legend (CO2, Urban fraction, Building height)
 leg_trend = [
     mlines.Line2D([0],[0], color=C_CO2,    lw=1.5, label=r'CO$_2$ (left axis)'),
     mlines.Line2D([0],[0], color=C_URBAN,  lw=1.2, ls='--', label='Urban fraction (right axis)'),
     mlines.Line2D([0],[0], color=C_HEIGHT, lw=1.2, ls=(0,(3,1,1,1)), label='Building height (right axis)'),
 ]
 l1 = fig.legend(handles=leg_trend, loc='lower center', ncol=3,
-                bbox_to_anchor=(0.5, 0.055), # Y軸座標偏上
+                bbox_to_anchor=(0.5, 0.055),  # upper legend row
                 frameon=False, fontsize=6, handletextpad=0.4, columnspacing=1.5)
 
-# 必須手動將第一個 legend 寫入，避免被第二個 fig.legend() 覆蓋
+# Must add l1 as artist so the second fig.legend() call does not overwrite it
 fig.add_artist(l1)
 
-# 【第二排圖例】：森林圖圖例
+# Legend row 2: forest plot legend
 h_u  = mlines.Line2D([0],[0], marker='o', color=CV_URBAN,  lw=1.0, markersize=4.5,
                       markerfacecolor=CV_URBAN, label='Urban fraction (horizontal expansion)')
 h_h  = mlines.Line2D([0],[0], marker='s', color=CV_HEIGHT, lw=1.0, markersize=4.5,
@@ -309,10 +309,10 @@ h_ns = mlines.Line2D([0],[0], marker='o', color='#555', lw=0, markersize=4.5,
                       markerfacecolor='white', markeredgewidth=0.7, label='p ≥ 0.10 (open)')
 
 l2 = fig.legend(handles=[h_u, h_h, h_sg, h_ns], loc='lower center', ncol=4,
-                bbox_to_anchor=(0.5, 0.03), # Y軸座標偏下
+                bbox_to_anchor=(0.5, 0.03),  # lower legend row
                 frameon=False, fontsize=6, handletextpad=0.4, columnspacing=0.9)
 
-# 顯著性文字說明 (移到最右下角)
+# Significance note (bottom-right corner)
 fig.text(0.97, 0.01,
          't p<0.10  * p<0.05  ** p<0.01  *** p<0.001\nError bars: 95% CI',
          ha='right', va='bottom', fontsize=5, color='#777')

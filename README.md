@@ -17,7 +17,8 @@ This repository contains the analysis code accompanying the paper. The compiled 
 │
 └── figures/
     ├── utils.py                # Shared plotting utilities
-    ├── fig1_clusters.py        # Fig. 1 — Emission trajectory clusters and geographic distribution
+    ├── fig1_clusters.py        # Fig. 1 — Cluster feature box plots and geographic distribution
+    ├── fig_a1_clusters.py      # Fig. A1 — Pairwise feature scatter plots and k-selection elbow curve
     ├── fig2_composite.py       # Fig. 2 — Cluster-level emission trajectories and regression coefficients
     ├── fig3_regional.py        # Fig. 3 — Regional shifts in morphological predictors
     ├── fig3_arrow_schematic.py # Fig. 3 — Cardinal direction schematic panel
@@ -67,6 +68,7 @@ python analysis/reg_by_agglom.py
 
 ```bash
 python figures/fig1_clusters.py
+python figures/fig_a1_clusters.py
 python figures/fig2_composite.py
 python figures/fig3_regional.py
 python figures/fig3_arrow_schematic.py

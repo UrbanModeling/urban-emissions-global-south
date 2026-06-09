@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-plot_s4e_attrib_map_a.py  —  Maps only
-双变量地图：水平扩张 vs 垂直高密化对排放的年均贡献量
-  x: β_urban  × slope(ln_urban)
-  y: β_height × slope(ln_height)
+fig4_attrib_map.py  —  Maps only
+Bivariate maps: annual attributed emission contribution of horizontal expansion vs vertical densification.
+  x: beta_urban  x slope(ln_urban)
+  y: beta_height x slope(ln_height)
 """
 
 import sys, warnings
@@ -110,7 +110,7 @@ print('Computing ln slopes...')
 early_slopes = pixel_ln_slopes(panel, range(2001, 2010))
 late_slopes  = pixel_ln_slopes(panel, range(2010, 2019))
 
-# ── 格点归属城市群 ─────────────────────────────────────────────────────────────
+# ── Assign pixels to agglomerations ──────────────────────────────────────────
 pix_comp = {}
 for comp_i, comp in enumerate(components):
     for cid in comp:
@@ -125,7 +125,7 @@ def add_comp_idx(df):
 early_slopes = add_comp_idx(early_slopes)
 late_slopes  = add_comp_idx(late_slopes)
 
-# ── 乘以回归系数 ───────────────────────────────────────────────────────────────
+# ── Multiply by regression coefficients ──────────────────────────────────────
 def apply_betas(slopes_df, period_name):
     df = slopes_df.copy()
     df['attrib_u'] = np.nan
@@ -144,7 +144,7 @@ print('Applying betas...')
 early_attrib = apply_betas(early_slopes, 'Early')
 late_attrib  = apply_betas(late_slopes,  'Late')
 
-# ── 全局分位数断点 ─────────────────────────────────────────────────────────────
+# ── Global quantile breakpoints ───────────────────────────────────────────────
 target_comps = set(AGGLOM_REG_NAME.keys())
 early_tgt = early_attrib[early_attrib['comp_i'].isin(target_comps)]
 late_tgt  = late_attrib[ late_attrib['comp_i'].isin(target_comps)]

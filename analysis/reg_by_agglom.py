@@ -1,7 +1,7 @@
 """
 reg_by_agglom.py  —  Section 4
-城市群内两路固定效应面板回归（≥30 pixels）
-通过 8-邻域像素邻接识别城市群
+Two-way FE panel regression within urban agglomerations (>=30 pixels).
+Agglomerations identified via 8-neighbour pixel adjacency.
 """
 
 import sys, warnings

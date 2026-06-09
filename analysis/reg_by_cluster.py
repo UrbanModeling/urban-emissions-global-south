@@ -1,8 +1,8 @@
 """
 reg_by_cluster.py  —  Section 2
-两路固定效应面板回归，按 cluster × period
+Two-way fixed-effects panel regression by cluster x period.
 ln(1+co2) ~ ln(1+urban_frac) + ln(1+height_m)
-pixel FE + year FE，SE 聚类至 pixel
+pixel FE + year FE; SE clustered at pixel level
 """
 
 import sys, warnings
