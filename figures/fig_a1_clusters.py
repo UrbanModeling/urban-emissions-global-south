@@ -138,22 +138,22 @@ def scatter_panel(ax, xcol, ycol, xlabel, ylabel, label):
 ax_a = fig.add_subplot(gs[0, 0])
 scatter_panel(ax_a,
               xcol='mean_lco2', ycol='dmean_lco2',
-              xlabel=r'Mean log CO$_2$ (2001–2018)',
-              ylabel=r'$\Delta$mean log CO$_2$',
+              xlabel=r'Mean ln CO$_2$ (2001–2018)',
+              ylabel=r'$\Delta$mean ln CO$_2$',
               label='a')
 
 ax_b = fig.add_subplot(gs[0, 1])
 scatter_panel(ax_b,
               xcol='mean_lco2', ycol='dslope_lco2',
-              xlabel=r'Mean log CO$_2$ (2001–2018)',
-              ylabel=r'$\Delta$slope (log CO$_2$ yr$^{-1}$)',
+              xlabel=r'Mean ln CO$_2$ (2001–2018)',
+              ylabel=r'$\Delta$slope (ln CO$_2$ yr$^{-1}$)',
               label='b')
 
 ax_c = fig.add_subplot(gs[1, 0])
 scatter_panel(ax_c,
               xcol='dmean_lco2', ycol='dslope_lco2',
-              xlabel=r'$\Delta$mean log CO$_2$',
-              ylabel=r'$\Delta$slope (log CO$_2$ yr$^{-1}$)',
+              xlabel=r'$\Delta$mean ln CO$_2$',
+              ylabel=r'$\Delta$slope (ln CO$_2$ yr$^{-1}$)',
               label='c')
 
 # ── Panel (d): elbow plot ─────────────────────────────────────────────────────

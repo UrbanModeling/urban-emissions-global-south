@@ -2,9 +2,9 @@
 fig1_clusters.py  —  Fig. 1: Emission trajectory clusters and geographic distribution
 Nature style, 2 rows:
   Row 1 (a, b, c): Box plots of the 3 clustering features by cluster
-                   (a) mean_lco2  — mean log CO2 level
-                   (b) dmean_lco2 — change in mean log CO2
-                   (c) dslope_lco2 — change in log CO2 trend slope
+                   (a) mean_lco2  — mean ln CO2 level
+                   (b) dmean_lco2 — change in mean ln CO2
+                   (c) dslope_lco2 — change in ln CO2 trend slope
   Row 2 (d):       Global South map, Natural Earth projection, pixel dots coloured by cluster
 """
 
@@ -130,13 +130,13 @@ def box_panel(ax, col, ylabel, label):
 
 # ── Panels (a–c): box plots ───────────────────────────────────────────────────
 ax_a = fig.add_subplot(gs_top[0])
-box_panel(ax_a, col='mean_lco2',    ylabel=r'Mean log CO$_2$',                    label='a')
+box_panel(ax_a, col='mean_lco2',    ylabel=r'Mean ln CO$_2$',                    label='a')
 
 ax_b = fig.add_subplot(gs_top[1])
-box_panel(ax_b, col='dmean_lco2',   ylabel=r'$\Delta$mean log CO$_2$',             label='b')
+box_panel(ax_b, col='dmean_lco2',   ylabel=r'$\Delta$mean ln CO$_2$',             label='b')
 
 ax_c = fig.add_subplot(gs_top[2])
-box_panel(ax_c, col='dslope_lco2',  ylabel=r'$\Delta$slope (log CO$_2$ yr$^{-1}$)', label='c')
+box_panel(ax_c, col='dslope_lco2',  ylabel=r'$\Delta$slope (ln CO$_2$ yr$^{-1}$)', label='c')
 
 # ── Panel (d): Natural Earth map ─────────────────────────────────────────────
 from matplotlib.patches import PathPatch
