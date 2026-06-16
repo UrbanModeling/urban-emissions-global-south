@@ -42,7 +42,7 @@ Download the following datasets and place them under a local database directory 
 |---------|--------|
 | EDGAR v2025 gridded CO₂ | https://edgar.jrc.ec.europa.eu/ |
 | MODIS MCD12Q1 (Land Cover) | https://lpdaac.usgs.gov/ |
-| Building height (Yu et al.) | [REPO URL] |
+| Building height (Yu et al.) | https://doi.org/10.34133/remotesensing.1033/ |
 | GHS-UCDB R2019A | https://ghsl.jrc.ec.europa.eu/ |
 | GHS-POP R2023A | https://ghsl.jrc.ec.europa.eu/ |
 
